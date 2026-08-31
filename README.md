@@ -11,25 +11,22 @@ Supervisor: Dr Kevin Berwick
 This repository holds the benchmark scripts and raw result data used in
 Chapter 8 (Cloud Deployment and GPU Acceleration) of the thesis. Each
 sub-folder corresponds to one cloud platform tested.
-
-```
 matlab-core-thesis/
-├── 01_core_visualisation/    Chapter 3 — trajectory generation & plotting
-├── 02_precision_analysis/    Chapter 4 — single/double/SMT precision
-├── 03_serial_benchmark/      Chapter 6 — serial execution timing
-├── 04_parallel_parfor/       Chapter 6 — parfor parallel benchmarks
-├── 05_batch_jobs/            Chapter 6 — cluster batch job scheduling
-└── 06_worker_scalability/    Chapter 6 — 1-8 worker scaling sweep
+├── 01_core_visualisation/ Chapter 3 — trajectory generation & plotting
+├── 02_precision_analysis/ Chapter 4 — single/double/SMT precision
+├── 03_serial_benchmark/ Chapter 6 — serial execution timing
+├── 04_parallel_parfor/ Chapter 6 — parfor parallel benchmarks
+├── 05_batch_jobs/ Chapter 6 — cluster batch job scheduling
+└── 06_worker_scalability/ Chapter 6 — 1-8 worker scaling sweep
 
 cloud-benchmarks/
-├── aws/            AWS EC2 t3.micro CPU benchmark (Python)
-├── colab-gpu/       Google Colab CPU vs GPU benchmark (Python + PyTorch)
-└── matlab-online/  MATLAB Online serial/parallel benchmark (MATLAB + data)
+├── aws/ AWS EC2 t3.micro CPU benchmark (Python script + results)
+└── colab-gpu/ Google Colab CPU vs GPU results (measured data)
 
 machine-learning/
-└── regression_prediction.py   Predicting trajectory behaviour from seed
-                                properties (Chapter 7, Figure 26)
-```
+└── regression_prediction.py Predicting trajectory behaviour from seed
+properties (Chapter 7)
+
 
 ## matlab-core-thesis/
 
@@ -37,6 +34,8 @@ The original MATLAB scripts behind Chapters 3, 4, and 6 — visualisation,
 numerical precision analysis, and benchmark testing. See
 [`matlab-core-thesis/README.md`](matlab-core-thesis/README.md) for a
 full breakdown of every script and which thesis figure it produces.
+
+## cloud-benchmarks/
 
 ### aws/
 - `aws_benchmark.py` — computes the Collatz stopping time for seeds
@@ -46,23 +45,10 @@ full breakdown of every script and which thesis figure it produces.
   stopping time for each problem size.
 
 ### colab-gpu/
-- `collatz_gpu_benchmark.py` — the same benchmark, run once on an
-  ordinary CPU and once on an NVIDIA Tesla T4 GPU (via Google Colab's
-  free tier), using PyTorch tensor operations to process many seeds
-  in parallel.
 - `collatz_gpu_benchmark.csv` — measured CPU and GPU execution times
-  and the resulting speedup at each problem size.
-
-### matlab-online/
-- `matlab_cloud_benchmark.m` — the actual MATLAB script run on
-  MATLAB Online. Explicitly requests a process-based parallel pool
-  first; when the free tier refuses this (with the exact message
-  `'Local' clusters are not supported in MATLAB Online`), it falls
-  back to a thread pool automatically and reports which one was
-  used.
-- `matlab_cloud_benchmark.csv` — five repeated runs of the same
-  benchmark on MATLAB Online, comparing serial execution against an
-  8-thread parallel pool.
+  and the resulting speedup at each problem size (Chapter 8), comparing
+  an ordinary CPU against an NVIDIA Tesla T4 GPU on Google Colab's
+  free tier.
 
 ## machine-learning/
 
@@ -93,22 +79,23 @@ Sequences (OEIS A006577).
 ```bash
 pip install -r requirements.txt
 python cloud-benchmarks/aws/aws_benchmark.py
-python cloud-benchmarks/colab-gpu/collatz_gpu_benchmark.py   # requires a CUDA GPU
 python machine-learning/regression_prediction.py             # takes a few minutes
 ```
 
-The GPU script requires an environment with a CUDA-capable GPU, such as
-a Google Colab notebook with the GPU runtime enabled
-(**Runtime → Change runtime type → T4 GPU**).
-
-The MATLAB script (`cloud-benchmarks/matlab-online/matlab_cloud_benchmark.m`)
-is written to be pasted directly into a MATLAB Online script and run —
-no local MATLAB installation is required.
+The MATLAB scripts in `matlab-core-thesis/` require MATLAB R2024a or
+later, with the Parallel Computing Toolbox (Chapters 4-6) and the
+Symbolic Math Toolbox (`triple_comparison_SMT.m` only).
 
 ## Full thesis
 
 The complete thesis, including the machine learning and precision-tools
-chapters not covered by this repository, is available on request from
+chapters not covered in full by this repository, is available on request
+from the author or TU Dublin's thesis repository.
+
+## Licence
+
+Code in this repository is provided for academic reference alongside
+the thesis. Please cite the thesis if you use or adapt this work.
 the author or TU Dublin's thesis repository.
 
 ## Licence
